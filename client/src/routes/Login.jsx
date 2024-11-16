@@ -11,7 +11,22 @@ export default function Login() {
 
   // form submit function
   async function formSubmit(data) {
-    //to-d0
+    const url = 'localhost:3000/api/users/login';
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data),
+      credentials: 'include'// make fetch include cookies in the request
+    });
+    
+    if(response.ok){
+      window.location.href = '/'; // redirect to home page
+
+    }else{
+      setLoginFail(true);
+    }
   }
   
   return (
