@@ -22,7 +22,7 @@ const upload = multer({ storage: storage });
 
 router.get('/all', async (req,res) => {
    //Get all products from the database
-   res.send( await prisma.product.findMany());
+   res.json( await prisma.product.findMany());
 });
 
 router.get('/:id', async (req,res) => {
@@ -73,8 +73,57 @@ const fileName = req.file ? req.file.filename : null; // gets unique filename fr
   res.json(product);
 });
 
-/*router.post('/purchase/:id', async (req,res) =>{
+router.post('/purchase', async (req,res) =>{
+  const customer = req.session.customer;
+  // Checks if there's an empty object aka customer not logged in
+  if(!customer){
+    return res.status(401).send('Not logged in');
+  }
+  res.send('What')
+  console.log(customer);
+  const { 
+    street,
+    city,
+    province,
+    country,
+    postal_code,
+    credit_card,
+    credit_expire,
+    credit_cvv,
+    invoice_amt, 
+    invoice_tax,
+    invoice_total, 
+    cart
+  } = req.body;
 
-});*/
+  let count = {};
+
+  cart.split(',').map((item)=>{
+    if(count[item]){ // checks if the object already contains the item as a key
+      count[item]++;  //if it does it increments the value
+    }else{
+      count[item] = 1; //if not it initializes it to 1
+    }
+  });
+
+  const purchase = await prisma.purchaseItem.create({
+    data:{
+    street,
+    city,
+    province,
+    country,
+    postal_code,
+    credit_card,
+    credit_expire,
+    credit_cvv,
+    invoice_amt, 
+    invoice_tax,
+    invoice_total, 
+
+    },
+  });
+  console.log(count);
+
+});
 
 export default router

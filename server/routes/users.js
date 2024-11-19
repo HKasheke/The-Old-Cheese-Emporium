@@ -55,6 +55,7 @@ router.post('/login', async (req,res) => {
       email: email,
     }
   });
+
   if (!existingCustomer) {
     return res.status(404).send('Customer doesn\'t exists');
   }
@@ -66,13 +67,23 @@ router.post('/login', async (req,res) => {
   }
   
   // setup customer session
-  req.session.customer = existingCustomer.email;
+  console.log()
+  req.session.customer = {
+    customer_id: existingCustomer.customer_id,
+    email: existingCustomer.email,
+    first_name: existingCustomer.first_name,
+    last_name: existingCustomer.last_name
+  };
 
   // send response
   res.send('Login route');
 });
 
 router.post('/logout', (req,res) => {
+  // Checks if there's an empty object aka customer not logged in
+  if(!req.session.customer){
+    return res.status(401).send('not logged in');
+  }
   req.session.destroy();
   res.send('Logout route');
 });
