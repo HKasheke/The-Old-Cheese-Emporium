@@ -1,6 +1,6 @@
 import express from 'express';
 import { PrismaClient } from '@prisma/client';
-import { hashPassword, comparePassword } from '../lib/utility.js';
+import { hashPassword, comparePassword, schema } from '../lib/utility.js';
 
 const router = express.Router();
 
@@ -14,6 +14,11 @@ router.post('/signup', async (req,res) => {
   if(!email || !password || !firstName || !lastName) {
     return res.status(400).send('Missing required fields');
   }
+
+  if(!schema.validate(password)){
+    return res.status(400).send('Invalid password');
+  }
+
   // check if customer alredy exists
   const existingCustomer = await prisma.customer.findUnique({
     where: {
