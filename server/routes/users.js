@@ -15,6 +15,7 @@ router.post('/signup', async (req,res) => {
     return res.status(400).send('Missing required fields');
   }
 
+  // Password validator checks rules in schema
   if(!schema.validate(password)){
     return res.status(400).send('Invalid password');
   }
@@ -25,6 +26,7 @@ router.post('/signup', async (req,res) => {
       email: email,
     }
   });
+
   if (existingCustomer) {
     return res.status(400).send('Customer already exists');
   }

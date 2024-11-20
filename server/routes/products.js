@@ -137,7 +137,7 @@ router.post('/purchase', async (req,res) =>{
     });
   });
 
-  res.send('What')
+  res.send('Purchased')
 });
 
 export default router
