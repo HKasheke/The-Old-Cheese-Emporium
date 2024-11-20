@@ -106,21 +106,24 @@ router.post('/purchase', async (req,res) =>{
     }
   });
 
-  const purchase = await prisma.purchaseItem.create({
+  const purchase = await prisma.purchase.create({
     data:{
-    street,
-    city,
-    province,
-    country,
-    postal_code,
-    credit_card,
-    credit_expire,
-    credit_cvv,
-    invoice_amt, 
-    invoice_tax,
-    invoice_total, 
-
+      street: street,
+      city: city,
+      province: province,
+      country: country,
+      postal_code: postal_code,
+      credit_card: credit_card,
+      credit_expire: credit_expire,
+      credit_cvv: credit_cvv,
+      invoice_amt: invoice_amt, 
+      invoice_tax: invoice_tax,
+      invoice_total: invoice_total 
     },
+  });
+
+  const purchaseItem = await prisma.purchaseItem.create({
+
   });
   console.log(count);
 
