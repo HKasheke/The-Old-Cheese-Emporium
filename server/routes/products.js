@@ -79,7 +79,8 @@ router.post('/purchase', async (req,res) =>{
   if(!customer){
     return res.status(401).send('Not logged in');
   }
-  res.send('What')
+  const customerId = customer.customer_id;
+
   console.log(customer);
   const { 
     street,
@@ -108,6 +109,7 @@ router.post('/purchase', async (req,res) =>{
 
   const purchase = await prisma.purchase.create({
     data:{
+      customer_id: customerId,
       street: street,
       city: city,
       province: province,
@@ -115,18 +117,28 @@ router.post('/purchase', async (req,res) =>{
       postal_code: postal_code,
       credit_card: credit_card,
       credit_expire: credit_expire,
-      credit_cvv: credit_cvv,
+      credit_cvv: parseInt(credit_cvv),
       invoice_amt: invoice_amt, 
       invoice_tax: invoice_tax,
-      invoice_total: invoice_total 
+      invoice_total: invoice_total, 
     },
   });
-
-  const purchaseItem = await prisma.purchaseItem.create({
+    
+  const keys = Object.keys(count);
+  console.log(count);
+  
+  keys.map(async (key) => {
+    let purchaseItem = await prisma.purchaseItem.create({
+      data:{
+        purchase_id: purchase.purchase_id,
+        product_id: parseInt(key),
+        quantity: count[key]
+      }
+    });
 
   });
-  console.log(count);
 
+  res.send('What')
 });
 
 export default router
