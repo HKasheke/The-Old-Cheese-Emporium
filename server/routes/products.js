@@ -135,7 +135,6 @@ router.post('/purchase', async (req,res) =>{
         quantity: count[key]
       }
     });
-
   });
 
   res.send('What')
