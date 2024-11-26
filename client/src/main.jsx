@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import App from './App';
 import Home from './routes/Home';
 import Details from './routes/Details';
 import Signup from './routes/Signup';
@@ -11,39 +12,46 @@ import Checkout from './routes/Checkout';
 import Confirmation from './routes/Confirmation';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
+import Card from './ui/Card';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home />
-  },
-  {
-    path: "/details",
-    element: <Details />
-  },
-  {
-    path: "/signup",
-    element: <Signup />
-  },
-  {
-    path: "/login",
-    element: <Login />
-  },
-  {
-    path: "/logout",
-    element: <Logout />
-  },
-  {
-    path: "/cart",
-    element: <Cart />
-  },
-  {
-    path: "/checkout",
-    element: <Checkout />
-  },
-  {
-    path: "/confirmation",
-    element: <Confirmation />
+    element: <App />,
+    children:[
+      {
+        path: "/home",
+        element: <Home />
+      },
+      {
+        path: "/details",
+        element: <Details />
+      },
+      {
+        path: "/signup",
+        element: <Signup />
+      },
+      {
+        path: "/login",
+        element: <Login />
+      },
+      {
+        path: "/logout",
+        element: <Logout />
+      },
+      {
+        path: "/cart",
+        element: <Cart />
+      },
+      {
+        path: "/checkout",
+        element: <Checkout />
+      },
+      {
+        path: "/confirmation",
+        element: <Confirmation />
+      },
+    ]
   },
 ]);
 

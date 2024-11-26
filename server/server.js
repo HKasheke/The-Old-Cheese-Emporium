@@ -15,7 +15,7 @@ app.use(express.static('public'));
 
 // cors middleware
 app.use(cors({
-  //origin: 'http://localhost:5173', // react client
+  origin: 'http://localhost:5173', // react client
   credentials: true
 }));
 
