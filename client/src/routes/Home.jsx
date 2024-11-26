@@ -5,8 +5,9 @@ export default function Home(){
 
   useEffect(() => {
     async function getUserSession() {
-      const url = "http://localhost:3000/api/users/getsession";
-      const response = await fetch(url, {
+      const hostUrl = import.meta.env.VITE_APP_HOST;
+      const apiUrl = hostUrl + "/api/users/getsession";
+      const response = await fetch(apiUrl, {
         method: "GET",
         credentials: 'include'
       });
