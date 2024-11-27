@@ -8,7 +8,7 @@ export default function Card(props) {
           <img src={`${props.apiHost}/images/${props.product.image_filename}`} className="thumbnail" />
 
           <div className="product-info">
-            <h5 className="card-title">{ props.product.name}</h5>
+            <h5 className="card-title"><Link to={`/products/${props.product.product_id}`}>{props.product.name}</Link></h5>
             <p className="card-text">
               {props.product.cost}<br />
             </p>                  

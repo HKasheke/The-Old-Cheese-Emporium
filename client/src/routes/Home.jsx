@@ -18,7 +18,7 @@ export default function Home(){
         const data = await response.json();
         if(!ignore){
           setProducts(data);
-          console.log(data);
+          //console.log(data);
         }
       }else{
         setProducts(null);
