@@ -3,6 +3,12 @@
     height: 100px;
     border-radius: 50%;
   }
+
+.detailsThumbnail {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+  }
   
   .character-info {
     min-width: 300px;

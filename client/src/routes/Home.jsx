@@ -37,7 +37,7 @@ export default function Home(){
       {
         products.length > 0 ?
         products.map(product =>(
-          <Card product={product} apiHost={hostUrl} showLinks={false}/>
+          <Card product={product} apiHost={hostUrl} showDetails={false}/>
         )):
         <p>No Products</p>
       }

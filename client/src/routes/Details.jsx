@@ -14,10 +14,6 @@ export default function Details(){
   const hostUrl = import.meta.env.VITE_APP_HOST;
   const productUrl = hostUrl + "/api/products/" + id;
 
-  function create (){
-    setCookie("cart", '');
-  }
-
   function addToCart(cart){
     if(cookies.cart){
       setCookie("cart", cookies.cart + ',' + id, {maxAge: 3600});
@@ -45,21 +41,24 @@ export default function Details(){
 
     let ignore = false;
     fetchProduct();
+    //console.log(typeof(cookies.cart));
+    //console.log(cookies.cart);
     return () => {
       ignore = true;
     }
 
   }, []);
 
+//TODO: Show Details  
   return (
     <div>
       <h1>Details</h1>
         <div>
-          { product && <Card product={product} apiHost={hostUrl} showLinks={false}/> }
+          { product && <Card product={product} apiHost={hostUrl} showDetails={true}/> }
+          <p className='d-grid gap-2 d-md-flex justify-content-center'>
+            <button className="btn btn-danger btn me-md-2" onClick={addToCart}>Add to cart</button> <Link to="/home" className="btn btn-outline-secondary ">Go back</Link>
+          </p>
         </div>
-        <p className='d-grid gap-2 d-md-flex justify-content-center'>
-          <button className="btn btn-danger btn me-md-2" onClick={addToCart}>Add To Cart</button> <Link to="/home" className="btn btn-outline-secondary ">Cancel</Link>
-        </p>
     </div>
   );
 }
