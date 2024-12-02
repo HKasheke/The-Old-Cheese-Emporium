@@ -5,16 +5,18 @@ import { useCookies } from "react-cookie";
 import { Link } from "react-router-dom";
 
 export default function Cart() {
-  const [cookies, setCookie, removeCookie] = useCookies(["cart"]);
-  const [currentTotal, setTotal] = useState(null);
+  const url  = useParams();
+  const [cookies] = useCookies(["cart"]);
+  const [cartSubtotal, setSubotal] = useState(null);
+  const [cartTotal, setCartTotal] = useState(null);
   const [productsInCart, setProductsInCart] = useState([]);
+  const [countObj, setCountObj] = useState([]);
   let count = {};
   let costs = {};
-  let total = 0;
-  const lastLength = 0;
+  //let total = 0;
+  const taxRate = 1.15;
 
   const hostUrl = import.meta.env.VITE_APP_HOST;
-  //get cookies string "clean" it(make an object) so we dont have any duplicates  
   function parseCookies(){
     if(cookies.cart){
       //console.log(cookies.cart);
@@ -29,17 +31,19 @@ export default function Cart() {
       } else {
             count[cookies.cart] = 1; //in case there is only one cookie
       }
-      console.log(count);
+      setCountObj(count);
+      console.log(countObj);
     }
   } 
 
-  useEffect(() => {
-    //map through list of numbers getting by id from object.getkeys to display in cards
+
+  //get cookies string "clean" it(make an object) so we dont have any duplicates  
+   useEffect(() => {
+      //map through list of numbers getting by id from object.getkeys to display in cards
     async function getCosts (){
-      const keys = Object.keys(count);
+      const keys = Object.keys(countObj);
       let products = [];
         //console.log(keys);
-        lastLength == cookies.cart.length;
         for(let key of keys){
           let productUrl = hostUrl + "/api/products/" + key;
           let response = await fetch(productUrl);
@@ -47,28 +51,37 @@ export default function Cart() {
             let data = await response.json();
             //console.log(data);
             products.push(data);
-            total += data.cost * count[key];
+            //total += data.cost * count[key]; //TODO: Fix pricing
           }
         }
-        console.log(total);
-        setTotal(total);
+      const subtotal = products.reduce(
+        (acc, product) => acc + countObj[product.product_id] * product.cost,0);
+      //const tax = subtotal * taxRate;
+      let total = subtotal * taxRate;
+      const precision = total.toString().split(".")[0].length + 2; //gets the legth of the whole number and ads 2 so that we always get 2 decinal places
+        setSubotal(subtotal);
+        setCartTotal(total.toPrecision(precision));
+
         setProductsInCart(products);
     }
 
-    let ignore = false;
+    //let ignore = false;
     //map and get values of items x amount of items
     if(cookies.cart){
       parseCookies();
       getCosts();
+
+        console.log("Subtotal = " + cartSubtotal);
+        console.log("Total = " + cartTotal);
+        console.log(url);
     }else {
       console.log("No cookies");
     }
 
     return () => {
-      ignore = true;
     }
 
-  }, []);
+  }, [cartSubtotal, cartTotal]); //Runs whenever these change
 
     //get total and display it
  
@@ -82,14 +95,21 @@ export default function Cart() {
         {        
           productsInCart.length > 0 ?
           productsInCart.map((product) =>(
-            <Card product={product} apiHost={hostUrl} showLinks={false}/>
+            <Card 
+              product={product} 
+              apiHost={hostUrl} 
+              showDetails={false} 
+              page = {window.location.href.split('/').pop()} 
+              quantity = {countObj[product.product_id]
+              }/>
           )):
           <p>Cart Empty</p>
         }
-        <p>
-          {currentTotal}
-        </p>
-        <p className='d-grid gap-2 d-md-flex justify-content-right'>
+        <h2>
+            {"Total: " + cartTotal}
+        </h2>        
+
+        <p className='d-grid gap-2 d-md-flex justify-content-center'>
           <button className="btn btn-danger btn me-md-2" to="/checkout" disabled>Purchase</button> <Link to="/home" className="btn btn-outline-secondary ">Continue Shopping</Link>
         </p>
       </div>

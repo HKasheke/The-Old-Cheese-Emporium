@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 
 export default function Details(){
-  const { id } = useParams();
+  const { id } = useParams(); //looking for id from routes page
 
   const [cookies, setCookie, removeCookie] = useCookies(["cart"]);
 
