@@ -12,7 +12,6 @@ import Checkout from './routes/Checkout';
 import Confirmation from './routes/Confirmation';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
-import Card from './ui/Card';
 
 const router = createBrowserRouter([
   {

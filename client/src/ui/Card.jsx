@@ -31,7 +31,7 @@ export default function Card(props) {
                 <div className="product-info">
                   <h5 className="card-title"><Link to={`/details/${props.product.product_id}`}>{props.product.name}</Link></h5>
                   <p className="card-text">
-                    {props.product.cost}<br />
+                    {"$" + props.product.cost}<br />
                   </p>                  
                 </div>
               </div>
@@ -44,7 +44,7 @@ export default function Card(props) {
                 </div>
                 <div>
                   <h5>Total</h5>
-                  {props.product.cost * props.quantity}
+                  {"$" + props.product.cost * props.quantity}
                 </div>  
               </div>
               
@@ -63,7 +63,7 @@ export default function Card(props) {
               <div className="product-info">
                 <h5 className="card-title"><Link to={`/details/${props.product.product_id}`}>{props.product.name}</Link></h5>
                 <p className="card-text">
-                  {props.product.cost}<br />
+                  {"$" + props.product.cost}<br />
                 </p>                  
               </div>
               

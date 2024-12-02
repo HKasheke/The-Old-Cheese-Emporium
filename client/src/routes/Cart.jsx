@@ -7,8 +7,8 @@ import { Link } from "react-router-dom";
 export default function Cart() {
   const url  = useParams();
   const [cookies] = useCookies(["cart"]);
-  const [cartSubtotal, setSubotal] = useState(null);
-  const [cartTotal, setCartTotal] = useState(null);
+  const [cartSubtotal, setSubotal] = useState(0);
+  const [cartTotal, setCartTotal] = useState(0);
   const [productsInCart, setProductsInCart] = useState([]);
   const [countObj, setCountObj] = useState([]);
   let count = {};
@@ -36,8 +36,6 @@ export default function Cart() {
     }
   } 
 
-
-  //get cookies string "clean" it(make an object) so we dont have any duplicates  
    useEffect(() => {
       //map through list of numbers getting by id from object.getkeys to display in cards
     async function getCosts (){
@@ -51,22 +49,21 @@ export default function Cart() {
             let data = await response.json();
             //console.log(data);
             products.push(data);
-            //total += data.cost * count[key]; //TODO: Fix pricing
           }
         }
       const subtotal = products.reduce(
         (acc, product) => acc + countObj[product.product_id] * product.cost,0);
-      //const tax = subtotal * taxRate;
-      let total = subtotal * taxRate;
-      const precision = total.toString().split(".")[0].length + 2; //gets the legth of the whole number and ads 2 so that we always get 2 decinal places
-        setSubotal(subtotal);
-        setCartTotal(total.toPrecision(precision));
+      
+      const total = subtotal * taxRate;
+      const totalPrecision = total.toString().split(".")[0].length + 2; //gets the legth of the whole number part of the float and ads 2 so that we always get 2 decinal places
+      const subtotalPrecision = subtotal.toString().split(".")[0].length + 2; //gets the legth of the whole number part of the float and ads 2 so that we always get 2 decinal places
+      
+      setSubotal(parseFloat(subtotal).toPrecision(subtotalPrecision));
+      setCartTotal(total.toPrecision(totalPrecision));
 
-        setProductsInCart(products);
+      setProductsInCart(products);
     }
 
-    //let ignore = false;
-    //map and get values of items x amount of items
     if(cookies.cart){
       parseCookies();
       getCosts();
@@ -83,11 +80,6 @@ export default function Cart() {
 
   }, [cartSubtotal, cartTotal]); //Runs whenever these change
 
-    //get total and display it
- 
-  //continue shopping button
-  //complete purchase button(link to Checkout page)
-
   return (
     <div>
       <h1>Cart</h1>
@@ -99,14 +91,14 @@ export default function Cart() {
               product={product} 
               apiHost={hostUrl} 
               showDetails={false} 
-              page = {window.location.href.split('/').pop()} 
+              page = {window.location.href.split('/').pop()} //this gets the url and splits it on the / and gets the last index which is the name of the current page
               quantity = {countObj[product.product_id]
               }/>
           )):
-          <p>Cart Empty</p>
+          <p className="d-grid gap-2 d-md-flex justify-content-center">Cart Empty</p>
         }
         <h2>
-            {"Total: " + cartTotal}
+            {"Subtotal: " + "$" + cartSubtotal}
         </h2>        
 
         <p className='d-grid gap-2 d-md-flex justify-content-center'>

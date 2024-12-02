@@ -4,7 +4,7 @@ import Sidebar from './ui/Sidebar';
 function App() {
   return (
     <>
-    <h1>App parent page test</h1> 
+    <h1>The Old Cheese Emporium</h1> 
     <div>
       <Sidebar />
     </div>
