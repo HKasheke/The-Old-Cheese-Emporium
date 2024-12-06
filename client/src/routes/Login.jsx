@@ -1,18 +1,21 @@
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../App";
 
 export default function Login() {
  
   // react-hook-form
+  const { setLoggedIn } = useContext(AuthContext);
   const { register, handleSubmit, formState: { errors } } = useForm();
-
   const [loginFail, setLoginFail] = useState(false);
-
+  
   // form submit function
   async function formSubmit(data) {
-    const url = 'localhost:3000/api/users/login';
-    const response = await fetch(url, {
+    const hostUrl = import.meta.env.VITE_APP_HOST;
+    const loginUrl = hostUrl + "/api/users/login";
+    //const url = 'localhost:3000/api/users/login';
+    const response = await fetch(loginUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -22,16 +25,20 @@ export default function Login() {
     });
     
     if(response.ok){
-      window.location.href = '/'; // redirect to home page
-
+      setLoggedIn(true);
+      setTimeout( async() =>{
+        window.location.href = '/home'; // redirect to home page
+      }, 5000);
+      window.location.href = '/home'; // redirect to home page
     }else{
+      console.log(response.json());
       setLoginFail(true);
     }
   }
-  
+ 
   return (
     <>
-      <h1>Login</h1>
+      <h2>Login</h2>
       {loginFail && <p className="text-danger">Incorrect username or password.</p>}
       <form onSubmit={handleSubmit(formSubmit)} method="post" className="w-25">
         <div className="mb-3">
@@ -45,7 +52,7 @@ export default function Login() {
           {errors.password && <span className="text-danger">{errors.password.message}</span>}
         </div>
         <button type="submit" className="btn btn-primary">Login</button>
-        <Link to="/" className="btn btn-outline-dark ms-2">Cancel</Link>
+        <Link to="/home" className="btn btn-outline-dark ms-2">Cancel</Link>
       </form>
       <p className="mt-4">Don't have an account. <Link to="/signup">Sign-up</Link> now.</p>
     </>

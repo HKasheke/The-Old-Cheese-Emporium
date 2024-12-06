@@ -17,6 +17,7 @@ router.post('/signup', async (req,res) => {
 
   // Password validator checks rules in schema
   if(!schema.validate(password)){
+    console.log("Invalid password");
     return res.status(400).send('Invalid password');
   }
 
@@ -83,7 +84,8 @@ router.post('/login', async (req,res) => {
   };
 
   // send response
-  res.send('Login route');
+  console.log(req.session.customer)
+  res.json({ message: 'Login successful', customer: req.session.customer });
 });
 
 router.post('/logout', (req,res) => {
@@ -91,8 +93,15 @@ router.post('/logout', (req,res) => {
   if(!req.session.customer){
     return res.status(401).send('not logged in');
   }
-  req.session.destroy();
-  res.send('Logout route');
+  req.session.destroy((err) => {
+    if(err){
+      console.error('Error destroying session', err);
+      return res.status(500).send('Could not log out. Try again later.');
+    }
+    res.clearCookie('connect.sid');
+    res.send('Logged out successfully');
+  });
+  //res.send('Logout route');
 });
 
 router.get('/getsession', (req,res) => {

@@ -4,17 +4,44 @@ import { Link } from "react-router-dom";
 export default function Signup() {
 
   // react-hook-form
+  const hostUrl = import.meta.env.VITE_APP_HOST;
+  const signUpUrl = hostUrl + "/api/users/signup";
   const { register, handleSubmit, formState: { errors } } = useForm();
 
   // form submit function
-  async function formSubmit(data) {
-    //to-d0
+  function addUser(data) {
+
+    //Creat the form
+    const formData = new FormData();
+    formData.append('firstName', data.firstName);
+    formData.append('lastName', data.lastName);
+    formData.append('email', data.email);
+    formData.append('password', data.password);
+    console.log(formData);
+    
+    async function postData(){
+      const response = await fetch(signUpUrl, {
+        method: "POST",
+        body: formData,
+        credentials: 'include'
+      });
+      
+      if (response.ok){
+        window.location.href = '/';
+
+      }else{
+        const errorData = await response.json();
+        console.error('Error:', errorData);
+      }
+    }
+
+    postData();
   }
 
   return (
     <>
       <h1>Signup</h1>
-      <form onSubmit={handleSubmit(formSubmit)} method="post" className="w-25">
+      <form className="w-25" onSubmit={handleSubmit(addUser)} method="post">
         <div className="mb-3">
           <label className="form-label">First Name</label>
           <input {...register("firstName", { required: true })} type="text" className="form-control bg-light" />

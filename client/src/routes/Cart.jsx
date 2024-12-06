@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import Card from "../ui/Card";
 import { useCookies } from "react-cookie";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../App";
 
 export default function Cart() {
   const url  = useParams();
@@ -11,6 +12,7 @@ export default function Cart() {
   const [cartTotal, setCartTotal] = useState(0);
   const [productsInCart, setProductsInCart] = useState([]);
   const [countObj, setCountObj] = useState([]);
+  const { loggedIn } = useContext(AuthContext);
   let count = {};
   let costs = {};
   //let total = 0;
@@ -102,7 +104,18 @@ export default function Cart() {
         </h2>        
 
         <p className='d-grid gap-2 d-md-flex justify-content-center'>
-          <button className="btn btn-danger btn me-md-2" to="/checkout" disabled>Purchase</button> <Link to="/home" className="btn btn-outline-secondary ">Continue Shopping</Link>
+          {(loggedIn)?
+          <button className="btn btn-danger btn me-md-2" to="/checkout" >
+            Purchase
+          </button> :
+          <button className="btn btn-danger btn me-md-2" to="/login" >
+            Purchase
+          </button> 
+        }
+          
+          <Link to="/home" className="btn btn-outline-secondary ">
+            Continue Shopping
+          </Link>
         </p>
       </div>
     </div>
