@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../App"; 
+import { Link } from "react-router-dom";
 
 export default function Logout() {
   const [status, setStatus] = useState("Logging out...");
@@ -36,7 +37,16 @@ export default function Logout() {
   return (
     <>
       <h2>Logout</h2>
-      <p>{status}</p>
+      <p className="d-grid gap-2 d-md-flex justify-content-center">{status}</p>
+      <p className='d-grid gap-2 d-md-flex justify-content-center'>
+        <Link className="btn btn-danger btn me-md-2" to="/login" >
+          Login
+        </Link> 
+          
+        <Link to="/home" className="btn btn-outline-secondary ">
+          Home
+        </Link>
+      </p>
     </>
   );
 }

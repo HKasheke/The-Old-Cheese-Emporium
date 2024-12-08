@@ -8,6 +8,7 @@ import { AuthContext } from "../App";
 export default function Cart() {
   const url  = useParams();
   const [cookies] = useCookies(["cart"]);
+  const [cartTax, setTax] = useState(0);
   const [cartSubtotal, setSubotal] = useState(0);
   const [cartTotal, setCartTotal] = useState(0);
   const [productsInCart, setProductsInCart] = useState([]);
@@ -16,7 +17,7 @@ export default function Cart() {
   let count = {};
   let costs = {};
   //let total = 0;
-  const taxRate = 1.15;
+  const taxRate = 0.15;
 
   const hostUrl = import.meta.env.VITE_APP_HOST;
   function parseCookies(){
@@ -56,10 +57,13 @@ export default function Cart() {
       const subtotal = products.reduce(
         (acc, product) => acc + countObj[product.product_id] * product.cost,0);
       
-      const total = subtotal * taxRate;
+      const tax = subtotal * taxRate;
+      const total = subtotal + tax;
+      const taxPrecision = tax.toString().split(".")[0].length + 2;
       const totalPrecision = total.toString().split(".")[0].length + 2; //gets the legth of the whole number part of the float and ads 2 so that we always get 2 decinal places
       const subtotalPrecision = subtotal.toString().split(".")[0].length + 2; //gets the legth of the whole number part of the float and ads 2 so that we always get 2 decinal places
       
+      setTax(tax.toPrecision(taxPrecision))
       setSubotal(parseFloat(subtotal).toPrecision(subtotalPrecision));
       setCartTotal(total.toPrecision(totalPrecision));
 
@@ -80,7 +84,7 @@ export default function Cart() {
     return () => {
     }
 
-  }, [cartSubtotal, cartTotal]); //Runs whenever these change
+  }, [cartSubtotal, cartTotal, cookies.cart]); //Runs whenever these change
 
   return (
     <div>
@@ -100,18 +104,20 @@ export default function Cart() {
           <p className="d-grid gap-2 d-md-flex justify-content-center">Cart Empty</p>
         }
         <h2>
-            {"Subtotal: " + "$" + cartSubtotal}
+            {"Sub-total: " + "$" + cartSubtotal} <br/>
+            {"Tax: " + "$" + cartTax}<br/>
+            {"Total: " + "$" + cartTotal}
         </h2>        
 
         <p className='d-grid gap-2 d-md-flex justify-content-center'>
           {(loggedIn)?
-          <button className="btn btn-danger btn me-md-2" to="/checkout" >
-            Purchase
-          </button> :
-          <button className="btn btn-danger btn me-md-2" to="/login" >
-            Purchase
-          </button> 
-        }
+            <Link className="btn btn-danger btn me-md-2" to="/checkout" >
+              Purchase
+            </Link> :
+            <Link className="btn btn-danger btn me-md-2" to="/login" >
+              Login to Purchase
+            </Link> 
+          }
           
           <Link to="/home" className="btn btn-outline-secondary ">
             Continue Shopping
